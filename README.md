@@ -1,6 +1,7 @@
 # wordle-game
 A captivating Wordle-inspired game built with React, featuring intuitive gameplay, smooth animations, and a dynamic results screen. Challenge yourself to guess the 5-letter word within six attempts!
 
+<<<<<<< HEAD
 ## Requirements
 ### Before you begins, ensure that you have installed following things.
 - Node.js (v18 or higher)
@@ -53,3 +54,6 @@ This project uses modern web technologies to deliver a smooth and engaging Wordl
 
 ### Contributions are welcome! If you have an idea to improve the project, feel free to fork the repo and submit a pull request.
 
+=======
+## Hello mother fucker
+>>>>>>> 7d717f3 (Updated-version)
