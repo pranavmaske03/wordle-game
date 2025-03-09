@@ -10,14 +10,13 @@ A captivating Wordle-inspired game built with React, featuring intuitive gamepla
 ## Installation
 
 ### 1 Clone the Repository
-  git clone https://github.com/pranavmaske03/wordle-game.git
+    git clone https://github.com/pranavmaske03/wordle-game.git
 
 ### 2 Install Dependancies
-
-  npm install
-  npm install tailwindcss @tailwindcss/vite
-  npm install framer-motion
+    npm install
+    npm install tailwindcss @tailwindcss/vite
+    npm install framer-motion
 
 ### 3 Start the development server
-  npm run dev
+    npm run dev
 
