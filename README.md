@@ -3,10 +3,20 @@ A captivating Wordle-inspired game built with React, featuring intuitive gamepla
 
 ## Requirements
 ### Before you begins, ensure that you have installed following things.
-  1 Node.js (v18 or higher)
-  2 npm (v9 or higher)
-  3 You also need stable internet connection to fetch api data.
+1 Node.js (v18 or higher)
+2 npm (v9 or higher)
+3 You also need stable internet connection to fetch api data.
 
 ## Installation
 
-1 clone
+1 Clone the Repository
+  git clone https://github.com/pranavmaske03/wordle-game.git
+
+2 Install Dependancies
+  npm install
+  npm install tailwindcss @tailwindcss/vite
+  npm install framer-motion
+
+3 Start the development server
+  npm run dev
+
