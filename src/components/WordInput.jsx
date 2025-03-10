@@ -57,9 +57,10 @@ function WordInput({ solution }) {
         if (currentGuess.length >= 5) {
             return;
         }
-        
-        if (/^[a-zA-Z]$/.test(key)) {
-            setCurrentGuess((prev) => prev + key);
+        const isLetter = event.key.match(/^[a-zA-Z]$/);
+
+        if (isLetter) {
+            setCurrentGuess(currentGuess + event.key);
         }
         
     }, [currentGuess, isGameOver, guesses,isTypingAllowed]);
