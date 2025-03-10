@@ -10,7 +10,7 @@ A captivating Wordle-inspired game built with React, featuring intuitive gamepla
 ## Installation
 
 ### 1 Clone the Repository
-    git clone https://github.com/pranavmaske03/wordle-game.git
+    git clone https://github.com/pranavmaske03/wrodle-game.git
 
 ### 2 Install Dependancies
     npm install
