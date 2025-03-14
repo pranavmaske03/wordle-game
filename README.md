@@ -51,5 +51,13 @@ This project uses modern web technologies to deliver a smooth and engaging Wordl
 -  **CSS (Tailwind or Custom Styles)** - Utilized for styling, ensuring a clean and responsive layout with minimal effort.
 -  **Dictonary API** - Used to dynamically fetch 5-letter words, ensuring varied gameplay and removing the need for static word list.
 
+  ## Contact
+
+- 📧 **Email:** [pranav@gmail.com](mailto:harshkorde05@gmail.com)
+- 🌐 **LinkedIn:** 
+
+For any further questions or inquiries, feel free to reach out. We are happy to assist you with any queries.
+
+
 ### Contributions are welcome! If you have an idea to improve the project, feel free to fork the repo and submit a pull request.
 
