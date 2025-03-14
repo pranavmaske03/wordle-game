@@ -53,7 +53,7 @@ This project uses modern web technologies to deliver a smooth and engaging Wordl
 
   ## Contact
 
-- 📧 **Email:** [pranav@gmail.com](mailto:harshkorde05@gmail.com)
+- 📧 **Email:** [pranavbmaske@gmail.com](mailto:pranavbmaske@gmail.com)
 - 🌐 **LinkedIn:** 
 
 For any further questions or inquiries, feel free to reach out. We are happy to assist you with any queries.
