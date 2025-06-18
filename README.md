@@ -55,10 +55,6 @@ This project uses modern web technologies to deliver a smooth and engaging Wordl
 
 ### Contributions are welcome! If you have an idea to improve the project, feel free to fork the repo and submit a pull request.
 
-=======
-## Hello mother fucker
->>>>>>> 7d717f3 (Updated-version)
-=======
 ## Install Dependancies
     npm install
     npm install tailwindcss @tailwindcss/vite
