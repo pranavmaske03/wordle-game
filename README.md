@@ -59,4 +59,3 @@ This project uses modern web technologies to deliver a smooth and engaging Wordl
     npm install
     npm install tailwindcss @tailwindcss/vite
     npm install framer-motion
->>>>>>> ed2909f (updated wordle)
