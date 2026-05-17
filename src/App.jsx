@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import WordInput from './components/WordInput';
 import Result from './components/Result';
-import StatsModal from './components/StatsModal';
-import SettingsModal from './components/SettingsModal';
 import { getDailyWord, loadDailyResult } from './utils/getDailyWord';
 import words from './data/words.json';
+
+const StatsModal = lazy(() => import('./components/StatsModal'));
+const SettingsModal = lazy(() => import('./components/SettingsModal'));
 
 function App() {
   const [solution, setSolution] = useState('');
@@ -72,16 +73,18 @@ function App() {
         darkMode={darkMode}
       />
 
-      {showStats && <StatsModal onClose={() => setShowStats(false)} />}
-      {showSettings && (
-        <SettingsModal
-          onClose={() => setShowSettings(false)}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          colorBlind={colorBlind}
-          setColorBlind={setColorBlind}
-        />
-      )}
+      <Suspense fallback={null}>
+        {showStats && <StatsModal onClose={() => setShowStats(false)} />}
+        {showSettings && (
+          <SettingsModal
+            onClose={() => setShowSettings(false)}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            colorBlind={colorBlind}
+            setColorBlind={setColorBlind}
+          />
+        )}
+      </Suspense>
 
       <div className="game-area">
         {solution && (
