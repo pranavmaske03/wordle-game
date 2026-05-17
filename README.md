@@ -1,6 +1,12 @@
 # Wordle Quest
 
-A polished Wordle-inspired game built with React. Guess the 5-letter word within six attempts!
+### Want to play [click here](https://findwordle.netlify.app/)
+
+## Requirements
+### Before you begins, ensure that you have installed following things.
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- You also need stable internet connection to fetch api data.
 
 ---
 
@@ -72,4 +78,7 @@ npm run dev
 
 ## Contributing
 
-Contributions are welcome! Fork the repo and submit a pull request.
+## Install Dependancies
+    npm install
+    npm install tailwindcss @tailwindcss/vite
+    npm install framer-motion
