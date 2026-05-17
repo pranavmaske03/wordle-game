@@ -1,16 +1,27 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import Grid from './Grid';
 import Result from './Result';
+import { getTodayKey } from '../utils/getDailyWord';
 
 const MAX_GUESSES = 6;
 
-function WordInput({ solution }) {
-    const [guesses, setGuesses] = useState(Array(MAX_GUESSES).fill(null));
+function WordInput({ solution, mode, savedState, onNewGame }) {
+    const [guesses, setGuesses] = useState(
+        savedState?.guesses ?? Array(MAX_GUESSES).fill(null)
+    );
     const [currentGuess, setCurrentGuess] = useState('');
-    const [isGameOver, setIsGameOver] = useState(false);
+    const [isGameOver, setIsGameOver] = useState(savedState?.isGameOver ?? false);
     const [isTypingAllowed, setIsTypingAllowed] = useState(true);
-    const [winner, setWinner] = useState(null);
+    const [winner, setWinner] = useState(savedState?.winner ?? null);
     const timeoutId = useRef(null);
+
+    useEffect(() => {
+        if (mode !== 'daily') return;
+            const state = { guesses, isGameOver, winner };
+        try {
+            localStorage.setItem(getTodayKey(), JSON.stringify(state));
+        } catch { }
+    }, [guesses, isGameOver, winner, mode]);
 
     const handleKey = useCallback((event) => {
         if (isGameOver || !isTypingAllowed) return;
@@ -78,10 +89,10 @@ function WordInput({ solution }) {
                 const isCurrentGuess = index === guesses.findIndex(val => val == null);
                 return (
                     <Grid
-                    key={index}
-                    guess={isCurrentGuess ? currentGuess : guess ?? ""}
-                    isFinal={!isCurrentGuess && guess != null}
-                    solution={solution}
+                    key = {index}
+                    guess = {isCurrentGuess ? currentGuess : guess ?? ""}
+                    isFinal = {!isCurrentGuess && guess != null}
+                    solution = {solution}
                     />
                 );
                 })}
@@ -89,10 +100,12 @@ function WordInput({ solution }) {
             </div>
         ) : (
         <Result
-          winner={winner}
-          solution={solution}
+          winner = {winner}
+          solution = {solution}
+          mode = {mode}
+          onNewGame = {onNewGame}
         />
-        )}
+      )}
     </>
   );
 }
