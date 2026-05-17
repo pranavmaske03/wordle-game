@@ -4,6 +4,8 @@ A polished Wordle-inspired game built with React. Guess the 5-letter word within
 
 ---
 
+### Want to play [click here](https://wordle-quest-game.vercel.app/)
+
 ## Features
 
 - 📅 **Daily Mode** — Same word for everyone, resets at midnight
