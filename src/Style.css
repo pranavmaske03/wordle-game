@@ -1,35 +1,77 @@
-.board {
-    display: flex;
-    gap: 5px;
-    flex-direction: column;
-    justify-content: flex-start;  /* 🔥 Move content towards the top */
-    align-items: center;  
-    height: 100vh; 
-    overflow: hidden;
-    color: white;
-    padding-top: 5vh;  /* 🔥 Adjust as needed */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+:root {
+  --green: #538d4e;
+  --yellow: #b59f3b;
+  --gray: #787C7E;
+  --bg: #0f1117;
+  --surface: #161b27;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --muted: #6b7280;
+  --tile-empty: #1a2035;
+}
 
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.app-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+  padding: 8px 0;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
 
 .line {
-    display: flex;
-    gap: 5px;
+  display: flex;
+  gap: 5px;
 }
 
 .tile {
-    width: 80px;
-    height: 80px;
-    border: 2px solid rgb(160, 160, 160); /* Softer gray */
-    font-size: 36px; /* Slightly bigger */
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-    text-transform: uppercase;
-    color: white;
-    border-radius: 10px; /* Soft rounded edges */
-    box-shadow: inset 0 -4px 6px rgba(0, 0, 0, 0.3); /* Subtle depth inside */
-    letter-spacing: 2px; /* Slightly spaced letters */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Soft glow effect */
+  width: 58px;
+  height: 58px;
+  border: 2px solid var(--border);
+  font-size: 28px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  color: var(--text);
+  border-radius: 8px;
+  font-family: 'Playfair Display', serif;
+  box-shadow:
+    inset 0 -3px 6px rgba(0,0,0,0.3),
+    0 2px 8px rgba(0,0,0,0.2);
+  transition: border-color 0.2s;
 }

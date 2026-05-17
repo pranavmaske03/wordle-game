@@ -22,24 +22,24 @@ function SolutionTile({ letter, index, winner }) {
       animate={{ rotateY: 0, opacity: 1, y: 0 }}
       transition={{ delay: 0.6 + index * 0.15, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
     >
-      <div style={{
-        width: 56, height: 64,
-        background: winner
-          ? 'linear-gradient(135deg, #3d6b35 0%, #538d4e 50%, #6aaf60 100%)'
-          : 'linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 50%, #444 100%)',
-        border: winner ? '1px solid #6aaf60' : '1px solid #555',
-        borderRadius: 10,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 26, fontWeight: 900,
-        color: winner ? '#d4edda' : '#bbb',
-        textTransform: 'uppercase',
-        boxShadow: winner
-          ? '0 0 20px rgba(83,141,78,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
-          : '0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
-        fontFamily: "'Georgia', serif",
-      }}>
-        {letter}
-      </div>
+    <div style={{
+      width: 56, height: 64,
+      background: winner
+        ? 'linear-gradient(135deg, #3d6b35 0%, #538d4e 50%, #6aaf60 100%)'
+        : 'linear-gradient(135deg, var(--tile-empty) 0%, var(--surface) 100%)',
+      border: winner ? '1px solid #6aaf60' : '1px solid var(--border)',
+      borderRadius: 10,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: 26, fontWeight: 900,
+      color: winner ? '#d4edda' : 'var(--text)',
+      textTransform: 'uppercase',
+      boxShadow: winner
+        ? '0 0 20px rgba(83,141,78,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+        : '0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)',
+      fontFamily: "'Georgia', serif",
+    }}>
+      {letter}
+    </div>
     </motion.div>
   );
 }
@@ -104,7 +104,9 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       position: 'relative', overflow: 'hidden',
-      background: '#111827', padding: '2rem 1rem',
+      background: 'var(--bg)',
+      padding: '2rem 1rem',
+      transition: 'background 0.3s',
     }}>
       <Toast message={toastMsg} />
       <motion.div
@@ -143,7 +145,7 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
               style={{
                 fontSize: 11, fontWeight: 700, letterSpacing: '0.3em',
                 textTransform: 'uppercase',
-                color: winner ? '#6aaf60' : '#6b7280',
+                color: winner ? '#6aaf60' : 'var(--muted)',
                 marginBottom: 14, fontFamily: 'monospace',
               }}
             >
@@ -172,7 +174,7 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.45, duration: 0.6 }}
               style={{
-                color: '#6b7280', fontSize: 15, fontStyle: 'italic',
+                color: 'var(--muted)', fontSize: 15, fontStyle: 'italic',
                 marginBottom: 44, fontFamily: "'Georgia', serif", textAlign: 'center',
               }}
             >
@@ -187,7 +189,7 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
                 transition={{ delay: 0.5 }}
                 style={{
                   fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase',
-                  color: '#4b5563', marginBottom: 14, fontFamily: 'monospace',
+                  color: 'var(--muted)', marginBottom: 14, fontFamily: 'monospace',
                 }}
               >
                 {winner ? 'the word was' : 'the answer was'}
@@ -223,7 +225,7 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
               transition={{ delay: 1.6, duration: 0.7 }}
               style={{
                 width: 260, height: 1,
-                background: 'linear-gradient(90deg, transparent, #374151, transparent)',
+                background: 'linear-gradient(90deg, transparent, var(--border), transparent)',
                 marginBottom: 32,
               }}
             />
@@ -234,19 +236,19 @@ function Result({ winner, solution, mode, guesses = [], onNewGame }) {
                 transition={{ delay: 1.8, duration: 0.6 }}
                 style={{
                   textAlign: 'center',
-                  background: 'rgba(255,255,255,0.025)',
-                  border: '1px solid #1f2937',
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
                   borderRadius: 18, padding: '20px 40px',
                 }}
               >
                 <p style={{
                   fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase',
-                  color: '#4b5563', marginBottom: 10, fontFamily: 'monospace',
+                  color: 'var(--muted)', marginBottom: 10, fontFamily: 'monospace',
                 }}>
                   Next word in
                 </p>
                 <p style={{
-                  fontSize: 40, fontWeight: 700, color: '#e5e7eb',
+                  fontSize: 40, fontWeight: 700, color: 'var(--text)',
                   fontFamily: "'Courier New', monospace",
                   letterSpacing: '0.06em', lineHeight: 1,
                 }}>
