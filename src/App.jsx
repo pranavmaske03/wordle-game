@@ -1,50 +1,115 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import WordInput from './components/WordInput';
+import Result from './components/Result';
+import { getDailyWord, loadDailyResult } from './utils/getDailyWord';
+import words from './data/words.json';
 
-const API_URL = '/api/api/fe/wordle-words';      // https://api.frontendexpert.io/api/api/fe/wordle-words
+const StatsModal = lazy(() => import('./components/StatsModal'));
+const SettingsModal = lazy(() => import('./components/SettingsModal'));
 
 function App() {
   const [solution, setSolution] = useState('');
-  const [isFetched, setIsFetched] = useState(false);
+  const [mode, setMode] = useState('daily');
+  const [gameKey, setGameKey] = useState(0);
+  const [showStats, setShowStats] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [completedDaily, setCompletedDaily] = useState(null);
+  const [darkMode, setDarkMode] = useState(true);
+  const [colorBlind, setColorBlind] = useState(false);
 
   useEffect(() => {
-    const fetchWords = async () => {
-      const response = await fetch(API_URL);
-      const words = await response.json();
-      const randomWord = words[Math.floor(Math.random() * words.length)];
-      console.log(randomWord);
-      setSolution(randomWord.toLowerCase());
-      setIsFetched(true);
-    };
-    fetchWords();
-  }, []);
+    if (mode === 'daily') {
+      setSolution(getDailyWord());
+      setCompletedDaily(loadDailyResult());
+    } else {
+      setSolution(words[Math.floor(Math.random() * words.length)].toLowerCase());
+      setCompletedDaily(null);
+    }
+  }, [mode, gameKey]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.style.setProperty('--bg', '#0f1117');
+      root.style.setProperty('--surface', '#111827');
+      root.style.setProperty('--border', '#1f2937');
+      root.style.setProperty('--text', '#e5e7eb');
+      root.style.setProperty('--muted', '#6b7280');
+      root.style.setProperty('--tile-empty', '#1a2035');
+    } else {
+      root.style.setProperty('--bg', '#f9fafb');
+      root.style.setProperty('--surface', '#ffffff');
+      root.style.setProperty('--border', '#d1d5db');
+      root.style.setProperty('--text', '#111827');
+      root.style.setProperty('--muted', '#6b7280');
+      root.style.setProperty('--tile-empty', '#ffffff');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (colorBlind) {
+      root.style.setProperty('--green', '#f5793a');
+      root.style.setProperty('--yellow', '#85c0f9');
+    } else {
+      root.style.setProperty('--green', '#538d4e');
+      root.style.setProperty('--yellow', '#b59f3b');
+    }
+  }, [colorBlind]);
+
+  const handleSetMode = (m) => {
+    setMode(m);
+    setGameKey(k => k + 1);
+  };
 
   return (
-    <>
-      <Header/>
-      <div className="h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-        { !isFetched ? (
-          <div className="flex flex-col justify-center items-center flex-grow">
-            <motion.div
-              className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+    <div className="app-wrapper">
+      <Header
+        mode={mode}
+        setMode={handleSetMode}
+        onStatsClick={() => setShowStats(true)}
+        onSettingsClick={() => setShowSettings(true)}
+        darkMode={darkMode}
+      />
+
+      <Suspense fallback={null}>
+        {showStats && <StatsModal onClose={() => setShowStats(false)} />}
+        {showSettings && (
+          <SettingsModal
+            onClose={() => setShowSettings(false)}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            colorBlind={colorBlind}
+            setColorBlind={setColorBlind}
+          />
+        )}
+      </Suspense>
+
+      <div className="game-area">
+        {solution && (
+          mode === 'daily' && completedDaily ? (
+            <Result
+              winner={completedDaily.winner}
+              solution={solution}
+              mode="daily"
+              guesses={completedDaily.guesses.filter(g => g != null)}
+              onNewGame={null}
             />
-            <motion.p
-              className="mt-4 text-lg font-semibold text-gray-300"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-            >
-              Loading...
-            </motion.p>
-          </div>
-          ) : (          
-          <WordInput solution={solution} />
+          ) : (
+            <WordInput
+              key={gameKey}
+              solution={solution}
+              mode={mode}
+              onGameOver={() => {
+                if (mode === 'daily') setCompletedDaily(loadDailyResult());
+              }}
+              onNewGame={mode === 'random' ? () => setGameKey(k => k + 1) : null}
+            />
+          )
         )}
       </div>
-    </>
+    </div>
   );
 }
 
