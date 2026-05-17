@@ -28,3 +28,18 @@ export function getMsUntilMidnight() {
   midnight.setHours(24, 0, 0, 0);
   return midnight - now;
 }
+
+export function saveDailyResult(guesses, winner) {
+  const key = getTodayKey();
+  localStorage.setItem(key, JSON.stringify({ guesses, winner, completed: true }));
+}
+
+export function loadDailyResult() {
+  const key = getTodayKey();
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}

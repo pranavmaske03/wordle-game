@@ -1,27 +1,16 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import Grid from './Grid';
 import Result from './Result';
-import { getTodayKey } from '../utils/getDailyWord';
+import { updateStats } from '../utils/stats';
+import { saveDailyResult } from '../utils/getDailyWord';
 
-const MAX_GUESSES = 6;
-
-function WordInput({ solution, mode, savedState, onNewGame }) {
-    const [guesses, setGuesses] = useState(
-        savedState?.guesses ?? Array(MAX_GUESSES).fill(null)
-    );
+function WordInput({ solution, mode, onGameOver }) {
+    const [guesses, setGuesses] = useState(Array(6).fill(null));
     const [currentGuess, setCurrentGuess] = useState('');
-    const [isGameOver, setIsGameOver] = useState(savedState?.isGameOver ?? false);
+    const [isGameOver, setIsGameOver] = useState(false);
     const [isTypingAllowed, setIsTypingAllowed] = useState(true);
-    const [winner, setWinner] = useState(savedState?.winner ?? null);
+    const [winner, setWinner] = useState(null);
     const timeoutId = useRef(null);
-
-    useEffect(() => {
-        if (mode !== 'daily') return;
-            const state = { guesses, isGameOver, winner };
-        try {
-            localStorage.setItem(getTodayKey(), JSON.stringify(state));
-        } catch { }
-    }, [guesses, isGameOver, winner, mode]);
 
     const handleKey = useCallback((event) => {
         if (isGameOver || !isTypingAllowed) return;
@@ -29,11 +18,9 @@ function WordInput({ solution, mode, savedState, onNewGame }) {
         if (event.key === 'Enter') {
             if (currentGuess.length !== 5) return;
 
-            const currentIndex = guesses.findIndex(val => val == null);
-            if (currentIndex === -1) return;
-
             const newGuesses = [...guesses];
-            newGuesses[currentIndex] = currentGuess.toLowerCase();
+            const rowIndex = guesses.findIndex(val => val == null);
+            newGuesses[rowIndex] = currentGuess.toLowerCase();
             setGuesses(newGuesses);
             setCurrentGuess('');
 
@@ -46,64 +33,64 @@ function WordInput({ solution, mode, savedState, onNewGame }) {
             timeoutId.current = setTimeout(() => {
                 setIsTypingAllowed(true);
                 const isCorrect = currentGuess.toLowerCase() === solution;
-                const isLastGuess = currentIndex === MAX_GUESSES - 1;
+                const isGridFull = newGuesses.findIndex(val => val == null) === -1;
 
-                if (isCorrect) {
-                    setIsGameOver(true);
-                    setWinner(true);
-                } else if (isLastGuess) {
-                    setIsGameOver(true);
-                    setWinner(false);
+                if (isCorrect || isGridFull) {
+                const won = isCorrect;
+                const numGuesses = newGuesses.filter(g => g != null).length;
+
+                updateStats(mode, won, numGuesses);
+                if (mode === 'daily') saveDailyResult(newGuesses, won);
+                onGameOver();
+
+                setIsGameOver(true);
+                setWinner(won);
                 }
             }, 2500);
         }
+
         if (event.key === 'Backspace') {
             setCurrentGuess(prev => prev.slice(0, -1));
             return;
         }
+
         if (currentGuess.length >= 5) return;
 
-        const isLetter = /^[a-zA-Z]$/.test(event.key);
-        if (isLetter) {
+        if (event.key.match(/^[a-zA-Z]$/)) {
             setCurrentGuess(prev => prev + event.key);
         }
-    }, [currentGuess, isGameOver, guesses, isTypingAllowed, solution]);
+    }, [currentGuess, isGameOver, guesses, isTypingAllowed, solution, mode, onGameOver]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
     }, [handleKey]);
 
-    useEffect(() => {
-        return () => {
-            if (timeoutId.current) clearTimeout(timeoutId.current);
-        };
-    }, []);
-
     return (
     <>
-        {!isGameOver ? (
-            <div className="flex flex-col items-center mt-10">
-            <div className="board flex flex-col gap-2">
-                {guesses.map((guess, index) => {
-                const isCurrentGuess = index === guesses.findIndex(val => val == null);
-                return (
-                    <Grid
-                    key = {index}
-                    guess = {isCurrentGuess ? currentGuess : guess ?? ""}
-                    isFinal = {!isCurrentGuess && guess != null}
-                    solution = {solution}
-                    />
-                );
-                })}
-            </div>
-            </div>
+      {!isGameOver ? (
+        <div className="flex flex-col items-center mt-10">
+          <div className="board flex flex-col gap-2">
+            {guesses.map((guess, index) => {
+              const isCurrentGuess = index === guesses.findIndex(val => val == null);
+              return (
+                <Grid
+                  key={index}
+                  guess={isCurrentGuess ? currentGuess : guess ?? ""}
+                  isFinal={!isCurrentGuess && guess != null}
+                  solution={solution}
+                />
+              );
+            })}
+          </div>
+        </div>
         ) : (
         <Result
-          winner = {winner}
-          solution = {solution}
-          mode = {mode}
-          onNewGame = {onNewGame}
+          winner={winner}
+          solution={solution}
+          mode={mode}
+          guesses={guesses.filter(g => g != null)}
+          onNewGame={mode === 'random' ? () => window.location.reload() : null}
         />
       )}
     </>

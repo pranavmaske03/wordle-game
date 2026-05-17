@@ -1,47 +1,68 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import WordInput from './components/WordInput';
+import Result from './components/Result';
+import StatsModal from './components/StatsModal';
+import { getDailyWord, loadDailyResult } from './utils/getDailyWord';
 import words from './data/words.json';
-import { getDailyWord, getTodayKey } from './utils/getDailyWord';
 
 function App() {
-
+  const [solution, setSolution] = useState('');
   const [mode, setMode] = useState('daily');
-  const dailyWord = useMemo(() => getDailyWord(), []);
+  const [gameKey, setGameKey] = useState(0);
+  const [showStats, setShowStats] = useState(false);
 
-  const [randomWord, setRandomWord] = useState(() =>
-    words[Math.floor(Math.random() * words.length)].toLowerCase()
-  );
-  const solution = mode === 'daily' ? dailyWord : randomWord;
-
-  const savedDailyState = useMemo(() => {
-    if (mode !== 'daily') return null;
-    try {
-      const saved = localStorage.getItem(getTodayKey());
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
+  const [completedDaily, setCompletedDaily] = useState(null);
+  useEffect(() => {
+    if (mode === 'daily') {
+      setSolution(getDailyWord());
+      const saved = loadDailyResult();
+      setCompletedDaily(saved);
+    } else {
+      setSolution(words[Math.floor(Math.random() * words.length)].toLowerCase());
+      setCompletedDaily(null);
     }
-  }, [mode]);
+  }, [mode, gameKey]);
+
+  const handleSetMode = (m) => {
+    setMode(m);
+    setGameKey(k => k + 1);
+  };
 
   const handleNewRandomGame = () => {
-    const newWord = words[Math.floor(Math.random() * words.length)].toLowerCase();
-    setRandomWord(newWord);
+    setGameKey(k => k + 1);
   };
 
   return (
-    <>
-      <Header mode = {mode} setMode={setMode} />
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-        <WordInput
-          key = {mode === 'daily' ? 'daily' : randomWord}
-          solution = {solution}
-          mode = {mode}
-          savedState = {savedDailyState}
-          onNewGame = {mode === 'random' ? handleNewRandomGame : null}
+    <div style={{ minHeight: '100vh', background: '#111827', color: 'white' }}>
+    <Header
+      mode={mode}
+      setMode={handleSetMode}
+      onStatsClick={() => setShowStats(true)}
+    />
+    {showStats && <StatsModal onClose={() => setShowStats(false)} />}
+    {solution && (
+      mode === 'daily' && completedDaily ? (
+        <Result
+          winner={completedDaily.winner}
+          solution={solution}
+          mode="daily"
+          guesses={completedDaily.guesses.filter(g => g != null)}
+          onNewGame={null}
         />
-      </div>
-    </>
+        ) : (
+        <WordInput
+          key={gameKey}
+          solution={solution}
+          mode={mode}
+          onGameOver={() => {
+            if (mode === 'daily') setCompletedDaily(loadDailyResult());
+          }}
+          onNewGame={mode === 'random' ? handleNewRandomGame : null}
+        />
+      )
+    )}
+    </div>
   );
 }
 
